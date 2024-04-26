@@ -1,0 +1,7 @@
+flask
+pandas
+requests
+
+
+flask-login
+Flask-SQLAlchemy
