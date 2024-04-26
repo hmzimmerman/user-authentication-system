@@ -1,7 +1,7 @@
 flask
 pandas
 requests
-
+python-dotenv
 
 flask-login
 Flask-SQLAlchemy
