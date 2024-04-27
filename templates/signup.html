@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Sign Up</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -16,7 +16,7 @@
             background-color: #f0f0f0;
         }
 
-        .login-container {
+        .signup-container {
             width: 400px;
             max-width: 100%;
             background-color: #fff;
@@ -25,12 +25,13 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        .login-container h2 {
+        .signup-container h2 {
             text-align: center;
         }
 
-        .login-container input[type="text"],
-        .login-container input[type="password"] {
+        .signup-container input[type="text"],
+        .signup-container input[type="email"],
+        .signup-container input[type="password"] {
             width: 100%;
             padding: 10px;
             margin-bottom: 10px;
@@ -39,7 +40,7 @@
             box-sizing: border-box;
         }
 
-        .login-container input[type="submit"] {
+        .signup-container input[type="submit"] {
             width: 100%;
             background-color: #0f3c4c;
             color: #fff;
@@ -50,18 +51,22 @@
             transition: background-color 0.3s;
         }
 
-        .login-container input[type="submit"]:hover {
+        .signup-container input[type="submit"]:hover {
             background-color: #0b2d39;
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <h2>Login</h2>
+    <div class="signup-container">
+        <h2>Sign Up</h2>
         <form action="#" method="post">
+            <input type="text" name="first_name" placeholder="First Name" required>
+            <input type="text" name="last_name" placeholder="Last Name" required>
             <input type="text" name="username" placeholder="Username" required>
+            <input type="email" name="email" placeholder="Email" required>
             <input type="password" name="password" placeholder="Password" required>
-            <input type="submit" value="Login">
+            <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+            <input type="submit" value="Sign Up">
         </form>
     </div>
 </body>
