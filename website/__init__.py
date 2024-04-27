@@ -15,8 +15,3 @@ def create_app(templatefolder=f'{os.getcwd()}/templates'):
     app.register_blueprint(views, url_prefix='/')
     
     return app
-
-
-    
-    
-    
