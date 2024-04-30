@@ -60,3 +60,4 @@ instance/
 # Environments
 .env
 .venv
+.env

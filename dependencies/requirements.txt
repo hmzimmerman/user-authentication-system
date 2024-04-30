@@ -2,6 +2,6 @@ flask
 pandas
 requests
 python-dotenv
-
+psycopg2
 flask-login
 Flask-SQLAlchemy
