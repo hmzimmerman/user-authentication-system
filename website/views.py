@@ -3,6 +3,7 @@
 from flask import Blueprint, render_template, redirect, url_for, request, session, flash
 from flask_login import login_user, logout_user, login_required, current_user #type: ignore #? may not be needed as a way to preserve using too many libraries  #! module is installed but missing library stubs or py.typed marker
 from .models import User
+from .decorators import guest_only
 from . import db
 import time
 from .auth import UserAuth as Auth # importing something as something else is a way to avoid circular imports
@@ -15,6 +16,7 @@ def home():
     return render_template('home.html', current_user=current_user)
 
 @views.route('/signup', methods=['GET', 'POST'])
+@guest_only
 def signup():
     if request.method == 'POST':
         # Extract form data
@@ -59,6 +61,7 @@ def signup():
     return render_template('signup.html')
 
 @views.route('/login', methods=['GET', 'POST'])
+@guest_only
 def login():
     if request.method == 'POST':
         # Extract form data
