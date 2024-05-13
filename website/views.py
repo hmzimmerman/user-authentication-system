@@ -45,7 +45,7 @@ def signup():
         
         '''
         
-        new_user = User(first_name=first_name, last_name=last_name, username=username, email=email, password_hash=password, password_salt=password, secret_key=password,is_two_factor_enabled=True) #todo remove password salt, secret key, and tfa from variables once nullable error is solved
+        new_user = User(first_name=first_name, last_name=last_name, username=username, email=email, password_hash=password, password_salt=password, secret_key=password, is_two_factor_enabled=False) #todo remove password salt, secret key, and tfa from variables once nullable error is solved
         #todo add new user to db and commit it, flash, login success, then log them in and redirect them to homepage
         db.session.add(new_user)
         db.session.commit()
