@@ -13,7 +13,7 @@
 </style>
 <div class="container">
     <div>
-        <h2>Welcome, Guest!</h2>
+        <h2>Welcome, {% if current_user.is_authenticated %}{{ current_user.first_name }}{% else %}Guest{% endif %}!</h2>
     </div>
 </div>
 {% endblock %}

@@ -17,9 +17,18 @@ def create_app(templatefolder=f'{os.getcwd()}/templates'):
     # Initialize SQLAlchemy with the app
     db.init_app(app)
 
+    # Initialize Flask-Login
+    login_manager = LoginManager(app)
+
     # Import and register blueprints
     from .views import views
     app.register_blueprint(views, url_prefix='/')
+
+    # Define user loader function
+    @login_manager.user_loader
+    def load_user(user_id):
+        from .models import User
+        return User.query.get(user_id)
 
     # Create database tables
     with app.app_context():

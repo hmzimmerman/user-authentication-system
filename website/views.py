@@ -1,7 +1,7 @@
 # File that contains route relating to the home page
 
 from flask import Blueprint, render_template, redirect, url_for, request, session, flash
-from flask_login import login_required, current_user #type: ignore #? may not be needed as a way to preserve using too many libraries  #! module is installed but missing library stubs or py.typed marker
+from flask_login import login_user, logout_user, login_required, current_user #type: ignore #? may not be needed as a way to preserve using too many libraries  #! module is installed but missing library stubs or py.typed marker
 from .models import User
 from . import db
 import time
@@ -12,11 +12,12 @@ views = Blueprint('views', __name__)
 
 @views.route('/')
 def home():
-    return render_template('home.html')
+    return render_template('home.html', current_user=current_user)
 
 @views.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
+        # Extract form data
         first_name = request.form.get('first_name')
         last_name = request.form.get('last_name')
         username = request.form.get('username')
@@ -45,6 +46,7 @@ def signup():
         
         '''
         
+        # Create a new user
         new_user = User(first_name=first_name, last_name=last_name, username=username, email=email, password_hash=password, password_salt=password, secret_key=password, is_two_factor_enabled=False) #todo remove password salt, secret key, and tfa from variables once nullable error is solved
         #todo add new user to db and commit it, flash, login success, then log them in and redirect them to homepage
         db.session.add(new_user)
@@ -56,13 +58,30 @@ def signup():
     
     return render_template('signup.html')
 
-@views.route('/login')
+@views.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'POST':
+        # Extract form data
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        # Query user from the database
+        user = User.query.filter_by(username=username).first()
+
+        # Check if user exists and password hash matches
+        if user and user.password_hash == password:
+            flash('Login successful', category='success')
+            session['user_id'] = user.id  # Set session cookie
+            login_user(user)
+            return redirect(url_for('views.home'))
+        else:
+            flash('Invalid username or password', category='error')
+            return redirect(url_for('views.login'))
+    
     return render_template('login.html')
 
-
-
-
-@views.route('/signout')
-def signout():
-    ...
+@views.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('views.home'))
