@@ -1,12 +1,13 @@
 # File that contains route relating to the home page
 
-from flask import Blueprint, render_template, redirect, url_for, request, session, flash
+from flask import Blueprint, render_template, redirect, url_for, request, session, flash,jsonify
 from flask_login import login_user, logout_user, login_required, current_user #type: ignore #? may not be needed as a way to preserve using too many libraries  #! module is installed but missing library stubs or py.typed marker
 from .models import User
 from .decorators import guest_only
 from . import db
 import time
-from .auth import UserAuth as Auth # importing something as something else is a way to avoid circular imports
+from .auth import username_exists, email_exists  # importing something as something else is a way to avoid circular imports
+
 
 
 views = Blueprint('views', __name__)
@@ -20,33 +21,32 @@ def home():
 def signup():
     if request.method == 'POST':
         # Extract form data
+        data = request.get_json()
+        
         first_name = request.form.get('first_name')
         last_name = request.form.get('last_name')
-        username = request.form.get('username')
-        email = request.form.get('email')
-        password = request.form.get('password') 
+        username = data.get('username')
+        email = data.get('email')
+        password = request.form.get('password')
+        confirm_password = request.form.get('confirm_password') 
         
-
-        #todo add function in auth to check for if email, or username is registered in db most will be added into the auth class but idk if you want to add data functions into their own classification
-        #in the meantime ill add code as if theyre there in a block
-        '''
-        email_exists = function call
-        username_exists = function call
-        valid email = function call 
+        if not email:
+            return jsonify({'error': 'Email is required'}), 400
         
-        if email exist:
-            flash('Email already associated with account', category='error') #flash just acts as a mini popup
-        elif not valid email:
-            flash('invalid email address', category='error')
-        elif username_exists:
-            flash('Username is unavailable', category='error')
-        elif password1 != password2:
-            flash("Passwords don't match", category='error')
+        elif email_exists(email):
+            return jsonify({'error': 'Email already exists'}), 400
+            #may possibly add flash for these if jsonify isnt enough
             
-        password = salt_password(password)
-        password = hash_password(password)
+        if not username:
+            return jsonify({'error': 'Username is required'}), 400
         
-        '''
+        elif username_exists(email):
+            return jsonify({'error': 'Username already exists'}), 400
+            #may possibly add flash for these if jsonify isnt enough
+            
+        if password != confirm_password:
+            flash('Passwords do not match', category='error')
+        
         
         # Create a new user
         new_user = User(first_name=first_name, last_name=last_name, username=username, email=email, password_hash=password, password_salt=password, secret_key=password, is_two_factor_enabled=False) #todo remove password salt, secret key, and tfa from variables once nullable error is solved
